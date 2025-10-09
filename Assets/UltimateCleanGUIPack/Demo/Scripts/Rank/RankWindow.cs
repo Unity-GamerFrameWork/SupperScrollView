@@ -36,7 +36,7 @@ public class RankWindow : MonoBehaviour
 
     }
     /// <summary>
-    /// 刷线数据
+    /// 刷新数据
     /// </summary>
     /// <param name="resPos"></param>
     public void RefreshListView(bool resPos=true)
