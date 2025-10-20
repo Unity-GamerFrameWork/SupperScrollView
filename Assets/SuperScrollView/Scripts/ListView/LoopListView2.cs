@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -273,10 +273,12 @@ namespace SuperScrollView
             }
         }
 
+
         /*
-        InitListView method is to initiate the LoopListView2 component. There are 3 parameters:
-        itemTotalCount: the total item count in the listview. If this parameter is set -1, then means there are infinite items, and scrollbar would not be supported, and the ItemIndex can be from –MaxInt to +MaxInt. If this parameter is set a value >=0 , then the ItemIndex can only be from 0 to itemTotalCount -1.
-        onGetItemByIndex: when a item is getting in the scrollrect viewport, and this Action will be called with the item’ index as a parameter, to let you create the item and update its content.
+            LoopGridView 方法用于初始化 LoopGridView2 组件。它包含 3 个参数：
+            1.itemTotalCount:初始化滚动Item的个数.（-1表示首尾相接无限循环,>0表示轴向无限循环）
+            2.onGetItemByIndex:Item显示时的回调(Item显示到某个时的回调)
+            3.initParam:初始化滚动参数的配置
         */
         public void InitListView(int itemTotalCount, System.Func<LoopListView2, int, LoopListViewItem2> onGetItemByIndex, LoopListViewInitParam initParam = null)
         {
@@ -463,6 +465,11 @@ namespace SuperScrollView
             并且不支持滚动条，ItemIndex 的值范围为-MaxInt 到 +MaxInt。
             如果此参数设置为>=0 的值，则ItemIndex 的值范围只能为 0 到 itemTotalCount -1。
             如果 resetPos 设置为 false，则此方法完成后，scrollrect 的内容位置将不会改变。
+
+            SetListItemCount:重新设置滚动列表个数
+            参数1:列表长度
+            参数2:resetPos:false,当前索引位置不发生变化;resetPos:true,位置重置到索引为0的位置
+            注意:在调用完成后需要调用RefreshAllShownItem()刷线当前数据的最新状态
         */
         public void SetListItemCount(int itemCount, bool resetPos = true)
         {
@@ -786,8 +793,9 @@ namespace SuperScrollView
         }
 
         /*
-        This method will move the scrollrect content’s position to ( the positon of itemIndex-th item + offset ),
-        and offset is from 0 to scrollrect viewport size. 
+            以瞬移的形式，直接硬切到指定目标索引Item处
+            参数1:瞬移到的ItemIndex索引
+            参数2:瞬移完成后Item所处位置的偏移量,若为横向滚动偏移量作用与X轴,若为纵向滚动偏移值作用于Y轴
         */
         public void MovePanelToItemIndex(int itemIndex, float offset)
         {
@@ -880,7 +888,7 @@ namespace SuperScrollView
             UpdateSnapMove(false, true);
         }
 
-        //update all visible items.
+        //刷新所有可见的Item的最新数据
         public void RefreshAllShownItem()
         {
             int count = mItemList.Count;
@@ -1972,7 +1980,13 @@ namespace SuperScrollView
             mCurSnapData.Clear();
         }
 
-        //moveMaxAbsVec param is the max abs snap move speed, if the value <= 0 then LoopListView2 would use SnapMoveDefaultMaxAbsVec
+        /*
+            以缓动动画的形式平滑滚动到目标索引Item处
+            参数1:要滚动到的目标Item索引
+            参数2:滚动速度
+            注意:如果要使用SetSnapTargetItemIndex,必须要开启LoopListView2脚本上的ItemSnapEnable
+
+         */
         public void SetSnapTargetItemIndex(int itemIndex, float moveMaxAbsVec = -1)
         {
             if (mItemTotalCount > 0)

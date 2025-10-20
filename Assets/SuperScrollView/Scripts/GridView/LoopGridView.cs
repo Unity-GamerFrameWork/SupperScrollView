@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -85,11 +85,11 @@ namespace SuperScrollView
         [SerializeField]
         Vector2 mItemSize = Vector2.zero;
         [SerializeField]
-        Vector2 mItemRecycleDistance = new Vector2(50,50);
+        Vector2 mItemRecycleDistance = new Vector2(50, 50);
         Vector2 mItemSizeWithPadding = Vector2.zero;
         Vector2 mStartPadding;
         Vector2 mEndPadding;
-        System.Func<LoopGridView,int,int,int, LoopGridViewItem> mOnGetItemByRowColumn;
+        System.Func<LoopGridView, int, int, int, LoopGridViewItem> mOnGetItemByRowColumn;
         List<GridItemGroup> mItemGroupObjPool = new List<GridItemGroup>();
 
         //if GridFixedType is GridFixedType.ColumnCountFixed, then the GridItemGroup is one row of the GridView
@@ -186,7 +186,7 @@ namespace SuperScrollView
 
         public bool ItemSnapEnable
         {
-            get {return mItemSnapEnable;}
+            get { return mItemSnapEnable; }
             set { mItemSnapEnable = value; }
         }
 
@@ -253,13 +253,13 @@ namespace SuperScrollView
         }
 
         /*
-        LoopGridView method is to initiate the LoopGridView component. There are 4 parameters:
-        itemTotalCount: the total item count in the GridView, this parameter must be set a value >=0 , then the ItemIndex can be from 0 to itemTotalCount -1.
-        onGetItemByRowColumn: when a item is getting in the ScrollRect viewport, and this Action will be called with the item' index and the row and column index as the parameters, to let you create the item and update its content.
-        settingParam: You can use this parameter to override the values in the Inspector Setting
+            LoopGridView 方法用于初始化 LoopGridView 组件。它包含 4 个参数：
+            1.itemTotalCount:初始化滚动Item的个数.（-1表示首尾相接无限循环,>0表示轴向无限循环）
+            2.onGetItemByRowColumn:Item显示时的回调
+            3.initParam:初始化滚动参数的配置
         */
-        public void InitGridView(int itemTotalCount, 
-            System.Func<LoopGridView,int,int,int, LoopGridViewItem> onGetItemByRowColumn, 
+        public void InitGridView(int itemTotalCount,
+            System.Func<LoopGridView, int, int, int, LoopGridViewItem> onGetItemByRowColumn,
             LoopGridViewSettingParam settingParam = null,
             LoopGridViewInitParam initParam = null)
         {
@@ -274,11 +274,11 @@ namespace SuperScrollView
                 Debug.LogError("itemTotalCount is  < 0");
                 itemTotalCount = 0;
             }
-            if(settingParam != null)
+            if (settingParam != null)
             {
                 UpdateFromSettingParam(settingParam);
             }
-            if(initParam != null)
+            if (initParam != null)
             {
                 mSmoothDumpRate = initParam.mSmoothDumpRate;
                 mSnapFinishThreshold = initParam.mSnapFinishThreshold;
@@ -307,7 +307,7 @@ namespace SuperScrollView
                 Debug.LogError("ScrollRect.verticalScrollbarVisibility cannot be set to AutoHideAndExpandViewport");
             }
             SetScrollbarListener();
-            if(mNeedReplaceScrollbarEventHandler)
+            if (mNeedReplaceScrollbarEventHandler)
             {
                 ReplaceScrollbarEventHandlerForSmoothMove();
             }
@@ -329,11 +329,11 @@ namespace SuperScrollView
         */
         public void SetListItemCount(int itemCount, bool resetPos = true)
         {
-            if(itemCount < 0)
+            if (itemCount < 0)
             {
                 return;
             }
-            if(itemCount == mItemTotalCount)
+            if (itemCount == mItemTotalCount)
             {
                 return;
             }
@@ -353,12 +353,12 @@ namespace SuperScrollView
             ClearAllTmpRecycledItem();
             if (resetPos)
             {
-                MovePanelToItemByRowColumn(0,0);
+                MovePanelToItemByRowColumn(0, 0);
                 return;
             }
         }
 
-       //fetch or create a new item form the item pool.
+        //fetch or create a new item form the item pool.
         public LoopGridViewItem NewListViewItem(string itemPrefabName)
         {
             GridItemPool pool = null;
@@ -389,7 +389,7 @@ namespace SuperScrollView
         */
         public void RefreshItemByItemIndex(int itemIndex)
         {
-            if(itemIndex < 0 || itemIndex >= ItemTotalCount)
+            if (itemIndex < 0 || itemIndex >= ItemTotalCount)
             {
                 return;
             }
@@ -407,7 +407,7 @@ namespace SuperScrollView
         To update a item by (row,column).if the item is not visible, then this method will do nothing.
         Otherwise this method will call mOnGetItemByRowColumn(row,column) to get a new updated item. 
         */
-        public void RefreshItemByRowColumn(int row,int column)
+        public void RefreshItemByRowColumn(int row, int column)
         {
             int count = mItemGroupList.Count;
             if (count == 0)
@@ -422,7 +422,7 @@ namespace SuperScrollView
                     return;
                 }
                 LoopGridViewItem curItem = group.GetItemByColumn(column);
-                if(curItem == null)
+                if (curItem == null)
                 {
                     return;
                 }
@@ -471,11 +471,11 @@ namespace SuperScrollView
         //set cur snap target
         public void SetSnapTargetItemRowColumn(int row, int column)
         {
-            if(row < 0)
+            if (row < 0)
             {
                 row = 0;
             }
-            if(column < 0)
+            if (column < 0)
             {
                 column = 0;
             }
@@ -515,11 +515,11 @@ namespace SuperScrollView
         */
         public void MovePanelToItemByIndex(int itemIndex, float offsetX = 0, float offsetY = 0)
         {
-            if(ItemTotalCount == 0)
+            if (ItemTotalCount == 0)
             {
                 return;
             }
-            if(itemIndex >= ItemTotalCount)
+            if (itemIndex >= ItemTotalCount)
             {
                 itemIndex = ItemTotalCount - 1;
             }
@@ -534,7 +534,7 @@ namespace SuperScrollView
         /*
         This method will move the panel's position to ( the position of (row,column) item + offset ).
         */
-        public void MovePanelToItemByRowColumn(int row,int column, float offsetX = 0,float offsetY = 0)
+        public void MovePanelToItemByRowColumn(int row, int column, float offsetX = 0, float offsetY = 0)
         {
             mScrollRect.StopMovement();
             mCurSnapData.Clear();
@@ -547,24 +547,24 @@ namespace SuperScrollView
             if (mScrollRect.horizontal)
             {
                 float maxCanMoveX = Mathf.Max(ContainerTrans.rect.width - ViewPortWidth, 0);
-                if(maxCanMoveX > 0)
+                if (maxCanMoveX > 0)
                 {
                     float x = -itemPos.x + offsetX;
                     x = Mathf.Min(Mathf.Abs(x), maxCanMoveX) * Mathf.Sign(x);
                     pos.x = x;
-                } 
+                }
             }
-            if(mScrollRect.vertical)
+            if (mScrollRect.vertical)
             {
                 float maxCanMoveY = Mathf.Max(ContainerTrans.rect.height - ViewPortHeight, 0);
-                if(maxCanMoveY > 0)
+                if (maxCanMoveY > 0)
                 {
                     float y = -itemPos.y + offsetY;
                     y = Mathf.Min(Mathf.Abs(y), maxCanMoveY) * Mathf.Sign(y);
                     pos.y = y;
                 }
             }
-            if(pos != mContainerTrans.anchoredPosition3D)
+            if (pos != mContainerTrans.anchoredPosition3D)
             {
                 mContainerTrans.anchoredPosition3D = pos;
             }
@@ -641,7 +641,7 @@ namespace SuperScrollView
 
         public RowColumnPair GetRowColumnByItemIndex(int itemIndex)
         {
-            if(itemIndex < 0)
+            if (itemIndex < 0)
             {
                 itemIndex = 0;
             }
@@ -695,11 +695,11 @@ namespace SuperScrollView
         //get the shown item of itemIndex, if this item is not shown,then return null.
         public LoopGridViewItem GetShownItemByItemIndex(int itemIndex)
         {
-            if(itemIndex < 0 || itemIndex >= ItemTotalCount)
+            if (itemIndex < 0 || itemIndex >= ItemTotalCount)
             {
                 return null;
             }
-            if(mItemGroupList.Count == 0)
+            if (mItemGroupList.Count == 0)
             {
                 return null;
             }
@@ -745,9 +745,9 @@ namespace SuperScrollView
         }
 
         //set mGridFixedType and mFixedRowOrColumnCount at runtime
-        public void SetGridFixedGroupCount(GridFixedType fixedType,int count)
+        public void SetGridFixedGroupCount(GridFixedType fixedType, int count)
         {
-            if(mGridFixedType == fixedType && mFixedRowOrColumnCount == count)
+            if (mGridFixedType == fixedType && mFixedRowOrColumnCount == count)
             {
                 return;
             }
@@ -1073,7 +1073,7 @@ namespace SuperScrollView
             {
                 return;
             }
-            while(group.First != null)
+            while (group.First != null)
             {
                 LoopGridViewItem item = group.RemoveFirst();
                 RecycleItemTmp(item);
@@ -1215,21 +1215,21 @@ namespace SuperScrollView
                     data.mItemPrefab.AddComponent<LoopGridViewItem>();
                 }
                 GridItemPool pool = new GridItemPool();
-                pool.Init(data.mItemPrefab,data.mInitCreateCount, mContainerTrans);
+                pool.Init(data.mItemPrefab, data.mInitCreateCount, mContainerTrans);
                 mItemPoolDict.Add(prefabName, pool);
                 mItemPoolList.Add(pool);
             }
         }
 
 
-        LoopGridViewItem GetNewItemByRowColumn(int row,int column)
+        LoopGridViewItem GetNewItemByRowColumn(int row, int column)
         {
             int itemIndex = GetItemIndexByRowColumn(row, column);
-            if(itemIndex < 0 || itemIndex >= ItemTotalCount)
+            if (itemIndex < 0 || itemIndex >= ItemTotalCount)
             {
                 return null;
             }
-            LoopGridViewItem newItem = mOnGetItemByRowColumn(this,itemIndex,row,column);
+            LoopGridViewItem newItem = mOnGetItemByRowColumn(this, itemIndex, row, column);
             if (newItem == null)
             {
                 return null;
@@ -1244,34 +1244,34 @@ namespace SuperScrollView
         }
 
 
-        RowColumnPair GetCeilItemRowColumnAtGivenAbsPos(float ax,float ay)
+        RowColumnPair GetCeilItemRowColumnAtGivenAbsPos(float ax, float ay)
         {
             ax = Mathf.Abs(ax);
             ay = Mathf.Abs(ay);
-            int row = Mathf.CeilToInt((ay - mStartPadding.y) / mItemSizeWithPadding.y)-1;
-            int column = Mathf.CeilToInt((ax - mStartPadding.x) / mItemSizeWithPadding.x)-1;
-            if(row < 0)
+            int row = Mathf.CeilToInt((ay - mStartPadding.y) / mItemSizeWithPadding.y) - 1;
+            int column = Mathf.CeilToInt((ax - mStartPadding.x) / mItemSizeWithPadding.x) - 1;
+            if (row < 0)
             {
                 row = 0;
             }
-            if(row >= mRowCount)
+            if (row >= mRowCount)
             {
                 row = mRowCount - 1;
             }
-            if(column < 0)
+            if (column < 0)
             {
                 column = 0;
             }
-            if(column >= mColumnCount)
+            if (column >= mColumnCount)
             {
                 column = mColumnCount - 1;
             }
-            return new RowColumnPair(row,column);
+            return new RowColumnPair(row, column);
         }
 
         void Update()
         {
-            if(mListViewInited == false)
+            if (mListViewInited == false)
             {
                 return;
             }
@@ -1306,18 +1306,18 @@ namespace SuperScrollView
             else if (mArrangeType == GridItemArrangeType.BottomLeftToTopRight)
             {
                 curX = Mathf.Clamp(curX, -maxCanMoveX, 0);
-                curY = Mathf.Clamp(curY, -maxCanMoveY,0);
+                curY = Mathf.Clamp(curY, -maxCanMoveY, 0);
             }
             else if (mArrangeType == GridItemArrangeType.BottomRightToTopLeft)
             {
                 curX = Mathf.Clamp(curX, 0, maxCanMoveX);
-                curY = Mathf.Clamp(curY, -maxCanMoveY,0);
+                curY = Mathf.Clamp(curY, -maxCanMoveY, 0);
 
             }
             else if (mArrangeType == GridItemArrangeType.TopRightToBottomLeft)
             {
-                curX = Mathf.Clamp(curX, 0,maxCanMoveX);
-                curY = Mathf.Clamp(curY, 0,maxCanMoveY);
+                curX = Mathf.Clamp(curX, 0, maxCanMoveX);
+                curY = Mathf.Clamp(curY, 0, maxCanMoveY);
             }
             return new Vector2(curX, curY);
         }
@@ -1328,7 +1328,7 @@ namespace SuperScrollView
             Vector2 distVector2 = GetContainerMovedDistance();
             if (mNeedCheckContentPosLeftCount <= 0 && mCurFrameItemRangeData.mCheckedPosition == distVector2)
             {
-               return;
+                return;
             }
             if (mNeedCheckContentPosLeftCount > 0)
             {
@@ -1336,11 +1336,11 @@ namespace SuperScrollView
             }
             float distX = distVector2.x - mItemRecycleDistance.x;
             float distY = distVector2.y - mItemRecycleDistance.y;
-            if(distX < 0)
+            if (distX < 0)
             {
                 distX = 0;
             }
-            if(distY < 0)
+            if (distY < 0)
             {
                 distY = 0;
             }
@@ -1355,7 +1355,7 @@ namespace SuperScrollView
             mCurFrameItemRangeData.mCheckedPosition = distVector2;
         }
 
-       
+
 
 
         void UpdateRowItemGroupForRecycleAndNew(GridItemGroup group)
@@ -1363,18 +1363,18 @@ namespace SuperScrollView
             int minColumn = mCurFrameItemRangeData.mMinColumn;
             int maxColumn = mCurFrameItemRangeData.mMaxColumn;
             int row = group.GroupIndex;
-            while(group.First != null && group.First.Column < minColumn)
+            while (group.First != null && group.First.Column < minColumn)
             {
                 RecycleItemTmp(group.RemoveFirst());
             }
-            while (group.Last != null && ( ( group.Last.Column > maxColumn ) || ( group.Last.ItemIndex >= ItemTotalCount ) ) )
+            while (group.Last != null && ((group.Last.Column > maxColumn) || (group.Last.ItemIndex >= ItemTotalCount)))
             {
                 RecycleItemTmp(group.RemoveLast());
             }
-            if(group.First == null)
+            if (group.First == null)
             {
                 LoopGridViewItem item = GetNewItemByRowColumn(row, minColumn);
-                if(item == null)
+                if (item == null)
                 {
                     return;
                 }
@@ -1383,7 +1383,7 @@ namespace SuperScrollView
             }
             while (group.First.Column > minColumn)
             {
-                LoopGridViewItem item = GetNewItemByRowColumn(row, group.First.Column-1);
+                LoopGridViewItem item = GetNewItemByRowColumn(row, group.First.Column - 1);
                 if (item == null)
                 {
                     break;
@@ -1414,7 +1414,7 @@ namespace SuperScrollView
             {
                 RecycleItemTmp(group.RemoveFirst());
             }
-            while (group.Last != null && ( ( group.Last.Row > maxRow )|| (group.Last.ItemIndex >= ItemTotalCount)) )
+            while (group.Last != null && ((group.Last.Row > maxRow) || (group.Last.ItemIndex >= ItemTotalCount)))
             {
                 RecycleItemTmp(group.RemoveLast());
             }
@@ -1441,7 +1441,7 @@ namespace SuperScrollView
             }
             while (group.Last.Row < maxRow)
             {
-                LoopGridViewItem item = GetNewItemByRowColumn(group.Last.Row + 1,column );
+                LoopGridViewItem item = GetNewItemByRowColumn(group.Last.Row + 1, column);
                 if (item == null)
                 {
                     break;
@@ -1535,7 +1535,7 @@ namespace SuperScrollView
             ForceSnapUpdateCheck();
         }
 
-        RowColumnPair FindNearestItemWithLocalPos(float x,float y)
+        RowColumnPair FindNearestItemWithLocalPos(float x, float y)
         {
             Vector2 targetPos = new Vector2(x, y);
             RowColumnPair val = GetCeilItemRowColumnAtGivenAbsPos(targetPos.x, targetPos.y);
@@ -1553,7 +1553,7 @@ namespace SuperScrollView
                     {
                         pos = GetItemSnapPivotLocalPos(r, c);
                         distance = (pos - targetPos).sqrMagnitude;
-                        if(distance < minDistance)
+                        if (distance < minDistance)
                         {
                             minDistance = distance;
                             ret.mRow = r;
@@ -1565,7 +1565,7 @@ namespace SuperScrollView
             return ret;
         }
 
-        Vector2 GetItemSnapPivotLocalPos(int row,int column)
+        Vector2 GetItemSnapPivotLocalPos(int row, int column)
         {
             Vector2 absPos = GetItemAbsPos(row, column);
             if (mArrangeType == GridItemArrangeType.TopLeftToBottomRight)
@@ -1574,7 +1574,7 @@ namespace SuperScrollView
                 float y = -absPos.y - mItemSize.y * (1 - mItemSnapPivot.y);
                 return new Vector2(x, y);
             }
-            else if(mArrangeType == GridItemArrangeType.BottomLeftToTopRight)
+            else if (mArrangeType == GridItemArrangeType.BottomLeftToTopRight)
             {
                 float x = absPos.x + mItemSize.x * mItemSnapPivot.x;
                 float y = absPos.y + mItemSize.y * mItemSnapPivot.y;
@@ -1582,13 +1582,13 @@ namespace SuperScrollView
             }
             else if (mArrangeType == GridItemArrangeType.TopRightToBottomLeft)
             {
-                float x = -absPos.x - mItemSize.x * (1-mItemSnapPivot.x);
-                float y = -absPos.y - mItemSize.y * (1-mItemSnapPivot.y);
+                float x = -absPos.x - mItemSize.x * (1 - mItemSnapPivot.x);
+                float y = -absPos.y - mItemSize.y * (1 - mItemSnapPivot.y);
                 return new Vector2(x, y);
             }
             else if (mArrangeType == GridItemArrangeType.BottomRightToTopLeft)
             {
-                float x = -absPos.x - mItemSize.x * (1-mItemSnapPivot.x);
+                float x = -absPos.x - mItemSize.x * (1 - mItemSnapPivot.x);
                 float y = absPos.y + mItemSize.y * mItemSnapPivot.y;
                 return new Vector2(x, y);
             }
@@ -1633,7 +1633,7 @@ namespace SuperScrollView
             {
                 return;
             }
-            if(IsContainerTransCanMove() == false)
+            if (IsContainerTransCanMove() == false)
             {
                 return;
             }
@@ -1650,7 +1650,7 @@ namespace SuperScrollView
             }
             if (needCheck)
             {
-                RowColumnPair curVal = new RowColumnPair(-1,-1);
+                RowColumnPair curVal = new RowColumnPair(-1, -1);
                 Vector2 snapTartetPos = GetViewPortSnapPivotLocalPos(pos);
                 curVal = FindNearestItemWithLocalPos(snapTartetPos.x, snapTartetPos.y);
                 if (curVal.mRow >= 0)
@@ -1737,7 +1737,7 @@ namespace SuperScrollView
 
             if (immediate || Mathf.Abs(mCurSnapData.mTargetSnapVal - mCurSnapData.mCurSnapVal) < mSnapFinishThreshold)
             {
-                pos = pos + (mCurSnapData.mTargetSnapVal - old)* mCurSnapData.mSnapNeedMoveDir;
+                pos = pos + (mCurSnapData.mTargetSnapVal - old) * mCurSnapData.mSnapNeedMoveDir;
                 mCurSnapData.mSnapStatus = SnapStatus.SnapMoveFinish;
                 if (mOnSnapItemFinished != null)
                 {
@@ -1757,7 +1757,7 @@ namespace SuperScrollView
 
         GridItemGroup GetShownGroup(int groupIndex)
         {
-            if(groupIndex < 0)
+            if (groupIndex < 0)
             {
                 return null;
             }
@@ -1774,8 +1774,8 @@ namespace SuperScrollView
             return mItemGroupList[i];
         }
 
- 
-        void FillCurSnapData(int row,int column)
+
+        void FillCurSnapData(int row, int column)
         {
             Vector2 itemSnapPivotLocalPos = GetItemSnapPivotLocalPos(row, column);
             Vector2 containerPos = GetContainerVaildPos(ContainerTrans.anchoredPosition3D.x, ContainerTrans.anchoredPosition3D.y);
@@ -1785,7 +1785,7 @@ namespace SuperScrollView
             {
                 dir.x = 0;
             }
-            if(mScrollRect.vertical == false)
+            if (mScrollRect.vertical == false)
             {
                 dir.y = 0;
             }
@@ -1839,12 +1839,12 @@ namespace SuperScrollView
                     mCurSnapData.Clear();
                     return;
                 }
-                FillCurSnapData(targetItem.Row,targetItem.Column);
+                FillCurSnapData(targetItem.Row, targetItem.Column);
                 mCurSnapData.mSnapStatus = SnapStatus.SnapMoving;
             }
 
         }
-       
+
 
         bool CanSnap()
         {
@@ -1866,7 +1866,7 @@ namespace SuperScrollView
                     return false;
                 }
             }
-            if(IsContainerTransCanMove() == false)
+            if (IsContainerTransCanMove() == false)
             {
                 return false;
             }
@@ -1880,7 +1880,7 @@ namespace SuperScrollView
             }
             Vector3 pos = mContainerTrans.anchoredPosition3D;
             Vector2 vPos = GetContainerVaildPos(pos.x, pos.y);
-            if(Mathf.Abs(pos.x - vPos.x) >3)
+            if (Mathf.Abs(pos.x - vPos.x) > 3)
             {
                 return false;
             }
