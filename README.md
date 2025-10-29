@@ -1,3 +1,4 @@
+<details>
 <summary>
 # 无限滚动解决方案
 UltimateCleanGUIPack:有一套完成的UI模板
@@ -153,6 +154,6 @@ public class RankWindow : MonoBehaviour
 
 ```
 </summary>
-
+</summary>details>
 
 
