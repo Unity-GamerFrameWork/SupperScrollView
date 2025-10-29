@@ -154,6 +154,6 @@ public class RankWindow : MonoBehaviour
 
 ```
 </summary>
-</summary>details>
+</details>
 
 
