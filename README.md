@@ -1,6 +1,6 @@
+
+# <summary>无限滚动解决方案</summary>
 <details>
-<summary>
-# 无限滚动解决方案
 UltimateCleanGUIPack:有一套完成的UI模板
 ## 介绍
 1. 什么是无限滚动?
@@ -153,7 +153,6 @@ public class RankWindow : MonoBehaviour
 }
 
 ```
-</summary>
 </details>
 
 
