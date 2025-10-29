@@ -1,5 +1,5 @@
-<details>
-<summary><h1>无限滚动解决方案</h1></summary>
+
+<h1>无限滚动解决方案</h1>
 1.UltimateCleanGUIPack:有一套完成的UI模板</br>
 2.SuperScrollView:无限滚动解决方案</br>
     
@@ -131,4 +131,3 @@ public class RankWindow : MonoBehaviour
     }
 }
 ```
-</details>
